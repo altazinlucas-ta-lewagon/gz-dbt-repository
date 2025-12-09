@@ -1,0 +1,19 @@
+# schema.yml
+version: 2
+
+sources:
+  - name: raw
+    database: le-wagon-2204.dbt_course.raw_gz_sales        # your GCP project ID
+    schema: dbt_course             # or use {{ target.schema }} for environment-safe naming
+    loader: bigquery                 # identifies how data is loaded (fivetran, airbyte, etc.)
+    freshness:
+      warn_after: {count: 12, period: hour}   # warn if data older than 12 hours
+      error_after: {count: 24, period: hour}  # error if data older than 24 hours
+    tables:
+      - name: sales
+        identifier: raw_gz_sales
+        loaded_at_field: updated_at            # used for freshness checks
+      - name: product
+        identifier: raw_gz_product
+      - name: ship
+        identifier: raw_gz_ship
