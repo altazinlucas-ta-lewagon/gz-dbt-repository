@@ -14,9 +14,10 @@ sources:
         identifier: raw_gz_sales     
         description: sales of Greenweez / we have one row per product_id found in each orders_id        #4.1 Adding Source Documentation
          # Freshness testing
-        loaded_at_field: date_date
-        freshness:
-         warn_after: {count: 90, period: day}
+        loaded_at_field: "TIMESTAMP(date_date)"
+        config: 
+          freshness:
+          warn_after: {count: 50000, period: day}
         columns:
           - name: date_date
             description: date of purchase
@@ -63,7 +64,7 @@ sources:
            - name: ship_cost
              description: shipping cost paid by Greenweez to the carrier/logistics provider               
 # Intermediate #
-models: 
+models: ## Documentation and TEST 5. bien mettre "models" pour garder le bon chemin et pas chercher dans Big query
       - name: int_orders_margin
         description: margin calculation per order
         columns:
