@@ -62,7 +62,98 @@ sources:
            - name: log_cost
              description: the cost of preparing the parcel in the distribution centre/warehouse
            - name: ship_cost
-             description: shipping cost paid by Greenweez to the carrier/logistics provider               
+             description: shipping cost paid by Greenweez to the carrier/logistics provider
+      - name: adwords
+        identifier: raw_gz_adwords
+        description: raw Adwords campaign performance data
+        columns:
+          - name: date_date
+            description: date of activity
+          - name: campaign_key
+            description: campaign identifier
+          - name: campaign_name
+            description: name of the campaign
+          - name: ad_cost
+            description: advertising spend
+          - name: paid_source
+            description: source platform
+          - name: impression
+            description: number of impressions
+          - name: click
+            description: number of clicks
+        tests:
+          - unique:
+              column_name: "(CAST(date_date AS STRING) || '-' || campaign_key || '-' || campgn_name)"
+
+## chall 3 3.2
+      - name: bing
+        identifier: raw_gz_bing
+        description: raw Bing Ads campaign performance data
+        columns:
+          - name: date_date
+            description: date of activity
+          - name: campaign_key
+            description: campaign identifier
+          - name: campaign_name
+            description: name of the campaign
+          - name: ad_cost
+            description: advertising spend
+          - name: paid_source
+            description: source platform
+          - name: impression
+            description: number of impressions
+          - name: click
+            description: number of clicks
+        tests:
+          - unique:
+              column_name: "(CAST(date_date AS STRING) || '-' || campaign_key || '-' || campgn_name)"
+
+
+      - name: criteo
+        identifier: raw_gz_criteo
+        description: raw Criteo campaign performance data
+        columns:
+          - name: date_date
+            description: date of activity
+          - name: campaign_key
+            description: campaign identifier
+          - name: campaign_name
+            description: name of the campaign
+          - name: ad_cost
+            description: advertising spend
+          - name: paid_source
+            description: source platform
+          - name: impression
+            description: number of impressions
+          - name: click
+            description: number of clicks
+        tests:
+          - unique:
+              column_name: "(CAST(date_date AS STRING) || '-' || campaign_key || '-' || campgn_name)"
+
+
+      - name: facebook
+        identifier: raw_gz_facebook
+        description: raw Facebook Ads campaign performance data
+        columns:
+          - name: date_date
+            description: date of activity
+          - name: campaign_key
+            description: campaign identifier
+          - name: campaign_name
+            description: name of the campaign
+          - name: ad_cost
+            description: advertising spend
+          - name: paid_source
+            description: source platform
+          - name: impression
+            description: number of impressions
+          - name: click
+            description: number of clicks
+        tests:
+          - unique:
+              column_name: "(CAST(date_date AS STRING) || '-' || campaign_key || '-' || campgn_name)"
+          
 # Intermediate #
 models: ## Documentation and TEST 5. bien mettre "models" pour garder le bon chemin et pas chercher dans Big query
       - name: int_orders_margin
@@ -164,4 +255,64 @@ models: ## Documentation and TEST 5. bien mettre "models" pour garder le bon che
           - name: log_cost
             description: the cost of preparing the parcel in the distribution centre/warehouse
           - name: ship_cost
-            description: shipping cost paid by Greenweez to the carrier/logistics provider
+            description: shipping cost paid by Greenweez to the carrier/logistics provide
+      ##chall 3 3.2
+      - name: int_campaigns
+        description: "Union of all marketing campaign staging models (Adwords, Bing, Criteo, Facebook)."
+        columns:
+          - name: date_date
+            description: "Date of the campaign event."
+            tests:
+              - not_null
+          - name: paid_source
+            description: "Marketing channel (adwords, bing, criteo, facebook)."
+            tests:
+              - not_null
+
+          - name: campaign_key
+            description: "Unique campaign identifier."
+            tests:
+              - not_null
+
+          - name: campaign_name
+            description: "Readable name of the campaign."
+            tests:
+              - not_null
+
+          - name: ad_cost
+            description: "Cost associated with the campaign."
+            tests:
+              - not_null
+
+          - name: impression
+            description: "Number of impressions received."
+
+          - name: click
+            description: "Number of clicks received."
+        tests:
+        - unique:
+            column_name: "(CAST(date_date AS STRING) || '-' || campaign_key || '-' || campaign_name)"
+
+      - name: int_campaigns_day
+        description: "Daily aggregated marketing campaign metrics across all channels."
+        columns:
+          - name: date_date
+            description: "Date of the aggregated campaign metrics."
+            tests:
+              - not_null
+              - unique
+
+          - name: ads_cost
+            description: "Total advertising cost for the day."
+            tests:
+              - not_null
+
+          - name: ads_impression
+            description: "Total impressions for the day."
+            tests:
+              - not_null
+
+          - name: ads_clicks
+            description: "Total clicks for the day."
+            tests:
+              - not_null
